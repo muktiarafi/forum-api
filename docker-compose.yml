@@ -1,0 +1,25 @@
+version: '3'
+services:
+  app:
+    restart: always
+    build: .
+    ports:
+      - '5000:5000'
+    environment:
+      PGHOST: localhost
+      PGUSER: developer
+      PGDATABASE: forum-api
+      PGPASSWORD: supersecretpassword
+      PGPORT: 5432
+      ACCESS_TOKEN_KEY: abcdefg
+      REFRESH_TOKEN_KEY: hijklmn
+      ACCESS_TOKEN_AGE: 7200
+
+  pg:
+    image: postgres:alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: forum-api
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: supersecretpassword

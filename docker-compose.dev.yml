@@ -1,0 +1,11 @@
+version: '3'
+services:
+  pg-test:
+    container_name: pg-test
+    image: postgres:alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: supersecretpassword
