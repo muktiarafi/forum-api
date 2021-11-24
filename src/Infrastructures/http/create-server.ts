@@ -11,8 +11,8 @@ import { threads } from '../../Interfaces/http/api/threads';
 
 export const createServer = async (container: Container) => {
   const server = new Hapi.Server({
-    host: process.env.HOST,
-    port: process.env.PORT,
+    host: process.env.HOST || 'localhost',
+    port: process.env.PORT || 8080,
   });
 
   await server.register([

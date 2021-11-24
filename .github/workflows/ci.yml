@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ master ]
+    
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+
+      postgres:
+        image: postgres:alpine
+        env:
+          POSTGRES_DB: test
+          POSTGRES_PASSWORD: supersecretpassword
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Migrate test db
+        run: npm run migrate:test up
+
+      - name: Test
+        run: npm run test
+        env:
+          ACCESS_TOKEN_KEY: abcdefg
+          REFRESH_TOKEN_KEY: hijklmn
+          ACCESS_TOKEN_AGE: 7200
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
