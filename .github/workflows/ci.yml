@@ -48,6 +48,11 @@ jobs:
           ACCESS_TOKEN_KEY: abcdefg
           REFRESH_TOKEN_KEY: hijklmn
           ACCESS_TOKEN_AGE: 7200
+          PGHOST_TEST: localhost
+          PGUSER_TEST: developer
+          PGDATABASE_TEST: test
+          PGPASSWORD_TEST: supersecretpassword
+          PGPORT_TEST: 5432
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
