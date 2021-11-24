@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { stdout } from 'process';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,7 +10,7 @@ const start = async () => {
   const server = await createServer(container);
   await server.start();
 
-  console.log(`server start at ${server.info.uri}`);
+  stdout.write(`server start at ${server.info.uri}`);
 };
 
 start();
