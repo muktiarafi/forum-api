@@ -15,6 +15,7 @@ jobs:
       postgres:
         image: postgres:alpine
         env:
+          POSTGRES_USER: developer
           POSTGRES_DB: test
           POSTGRES_PASSWORD: supersecretpassword
         options: >-
