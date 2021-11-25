@@ -23,6 +23,7 @@ describe('CommentDetail entities', () => {
       date: new Date(),
       username: 'fwerwer',
       replies: true,
+      likeCount: 1,
       isDelete: false,
     };
 
@@ -38,6 +39,7 @@ describe('CommentDetail entities', () => {
       date: new Date().toString(),
       username: 'fwerwer',
       replies: [],
+      likeCount: 2,
       isDelete: false,
     };
 
@@ -56,6 +58,7 @@ describe('CommentDetail entities', () => {
       date: new Date().toString(),
       username: 'fwerwer',
       replies: [],
+      likeCount: 0,
       isDelete: true,
     };
 

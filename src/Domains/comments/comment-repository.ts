@@ -9,5 +9,8 @@ export interface CommentRepository {
   getCommentsByThreadId(threadId: string): Promise<CommentDetail[]>;
   deleteComment(commentId: string): Promise<void>;
   checkOwnership(userId: string, commentId: string): Promise<void>;
-  checkExistance(commentId: string): Promise<void>;
+  isCommentAvailable(commentId: string): Promise<void>;
+  addLike(userId: string, commentId: string): Promise<void>;
+  deleteLike(userId: string, commentId: string): Promise<void>;
+  isLiked(userId: string, commentId: string): Promise<boolean>;
 }

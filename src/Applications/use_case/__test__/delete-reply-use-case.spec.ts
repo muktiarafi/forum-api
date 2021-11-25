@@ -15,7 +15,7 @@ describe('DeleteReplyUseCase', () => {
     const mockCommentRepository = <CommentRepository>{};
 
     mockThreadRepository.getThread = jest.fn().mockImplementation(() => Promise.resolve());
-    mockCommentRepository.checkExistance = jest.fn().mockImplementation(() => Promise.resolve());
+    mockCommentRepository.isCommentAvailable = jest.fn().mockImplementation(() => Promise.resolve());
     mockCommentRepository.checkOwnership = jest.fn().mockImplementation(() => Promise.resolve());
     mockCommentRepository.deleteComment = jest.fn().mockImplementation(() => Promise.resolve());
 
@@ -24,7 +24,7 @@ describe('DeleteReplyUseCase', () => {
     await deleteReplyUseCase.execute(useCasePayload);
 
     expect(mockThreadRepository.getThread).toHaveBeenLastCalledWith(useCasePayload.threadId);
-    expect(mockCommentRepository.checkExistance).toHaveBeenCalledWith(useCasePayload.commentId);
+    expect(mockCommentRepository.isCommentAvailable).toHaveBeenCalledWith(useCasePayload.commentId);
     expect(mockCommentRepository.checkOwnership).toHaveBeenCalledWith(useCasePayload.userId, useCasePayload.replyId);
     expect(mockCommentRepository.deleteComment).toHaveBeenCalledWith(useCasePayload.replyId);
   });

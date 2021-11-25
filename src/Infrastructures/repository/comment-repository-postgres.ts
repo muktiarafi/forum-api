@@ -18,6 +18,7 @@ interface CommentRow {
     username: string;
     date: string;
     isDelete: boolean;
+    likeCount: number;
     replies: Reply[];
   };
 }
@@ -74,6 +75,10 @@ export class CommentRepositoryPostgres implements CommentRepository {
         'username', u1.username,
         'date', c.date, 
         'isDelete', c.is_delete, 
+        'likeCount', (
+          SELECT COUNT(*) FROM likes AS l
+          WHERE l.comment_id = c.id
+        ),
         'replies', COALESCE((SELECT json_agg(json_build_object(
             'id', r2.id, 
             'content', r2.content, 
@@ -134,7 +139,7 @@ export class CommentRepositoryPostgres implements CommentRepository {
     await this.pool.query(query);
   }
 
-  async checkExistance(commentId: string) {
+  async isCommentAvailable(commentId: string) {
     const query = {
       text: `SELECT id FROM comments
       WHERE id = $1`,
@@ -146,5 +151,37 @@ export class CommentRepositoryPostgres implements CommentRepository {
     if (result.rows.length === 0) {
       throw new NotFoundError('resource not found');
     }
+  }
+
+  async addLike(userId: string, commentId: string) {
+    const query = {
+      text: `INSERT INTO likes (user_id, comment_id)
+      VALUES ($1, $2)`,
+      values: [userId, commentId],
+    };
+
+    await this.pool.query(query);
+  }
+
+  async deleteLike(userId: string, commentId: string) {
+    const query = {
+      text: `DELETE FROM likes
+      WHERE user_id = $1 AND comment_id = $2`,
+      values: [userId, commentId],
+    };
+
+    await this.pool.query(query);
+  }
+
+  async isLiked(userId: string, commentId: string) {
+    const query = {
+      text: `SELECT user_id FROM likes
+      WHERE user_id = $1 AND comment_id = $2`,
+      values: [userId, commentId],
+    };
+
+    const result = await this.pool.query(query);
+
+    return result.rows.length > 0;
   }
 }

@@ -5,6 +5,7 @@ import { AddReplyUseCase } from '../../../../Applications/use_case/add-reply-use
 import { AddThreadUseCase } from '../../../../Applications/use_case/add-thread-use-case';
 import { DeleteCommentUseCase } from '../../../../Applications/use_case/delete-comment-use-case';
 import { DeleteReplyUseCase } from '../../../../Applications/use_case/delete-reply-use-case';
+import { LikeCommentUseCase } from '../../../../Applications/use_case/like-comment-use-case';
 import { ThreadDetailUseCase } from '../../../../Applications/use_case/thread-detail-use-case';
 import TYPES from '../../../../Infrastructures/types';
 import {
@@ -14,6 +15,7 @@ import {
   IPostCommentReplyRequest,
   IPostThreadCommentRequest,
   IPostThreadRequest,
+  IPutCommentLikeRequest,
 } from './types/thread-handler-request';
 
 export class ThreadsHandler {
@@ -136,5 +138,21 @@ export class ThreadsHandler {
         status: 'success',
       })
       .code(200);
+  };
+
+  putCommentLikeHandler = async (request: IPutCommentLikeRequest, h: ResponseToolkit) => {
+    const likeCommentUseCase = this.container.get<LikeCommentUseCase>(TYPES.LikeCommentUseCase);
+    const { id: userId } = request.auth.credentials;
+    const { threadId, commentId } = request.params;
+
+    await likeCommentUseCase.execute({
+      userId,
+      threadId,
+      commentId,
+    });
+
+    return h.response({
+      status: 'success',
+    });
   };
 }

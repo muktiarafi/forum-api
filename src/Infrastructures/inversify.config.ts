@@ -27,6 +27,7 @@ import { AddCommentUseCase } from '../Applications/use_case/add-comment-use-case
 import { DeleteCommentUseCase } from '../Applications/use_case/delete-comment-use-case';
 import { AddReplyUseCase } from '../Applications/use_case/add-reply-use-case';
 import { DeleteReplyUseCase } from '../Applications/use_case/delete-reply-use-case';
+import { LikeCommentUseCase } from '../Applications/use_case/like-comment-use-case';
 
 const container = new Container();
 container.bind(TYPES.Pool).toConstantValue(pool);
@@ -53,5 +54,6 @@ container.bind(TYPES.AddCommentUseCase).to(AddCommentUseCase);
 container.bind(TYPES.DeleteCommentUseCase).to(DeleteCommentUseCase);
 container.bind(TYPES.AddReplyUseCase).to(AddReplyUseCase);
 container.bind(TYPES.DeleteReplyUseCase).to(DeleteReplyUseCase);
+container.bind(TYPES.LikeCommentUseCase).to(LikeCommentUseCase);
 
 export default container;

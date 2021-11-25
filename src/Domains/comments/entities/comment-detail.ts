@@ -6,20 +6,23 @@ export interface CommentDetailPayload {
   content: string;
   username: string;
   date: string;
+  likeCount: number;
   replies: ReplyDetail[];
   isDelete: boolean;
 }
 
 export class CommentDetail {
-  id: string;
+  readonly id: string;
 
-  content: string;
+  readonly content: string;
 
-  username: string;
+  readonly username: string;
 
-  date: string;
+  readonly date: string;
 
-  replies: ReplyDetail[];
+  readonly likeCount: number;
+
+  readonly replies: ReplyDetail[];
 
   constructor(payload: CommentDetailPayload) {
     this.verifyPayload(payload);
@@ -28,13 +31,14 @@ export class CommentDetail {
     this.content = payload.isDelete ? '**komentar telah dihapus**' : payload.content;
     this.date = payload.date;
     this.username = payload.username;
+    this.likeCount = payload.likeCount;
     this.replies = payload.replies;
   }
 
   verifyPayload(payload: CommentDetailPayload) {
-    const { id, content, date, username, replies } = payload;
+    const { id, content, date, username, likeCount, replies } = payload;
 
-    if (!id || !content || !date || !username || !replies) {
+    if (!id || !content || !date || !username || likeCount === undefined || !replies) {
       throw new Error(commentDetailErrors.NOT_CONTAIN_NEEDED_PROPERTY);
     }
 
@@ -43,6 +47,7 @@ export class CommentDetail {
       typeof content !== 'string' ||
       typeof date !== 'string' ||
       typeof username !== 'string' ||
+      typeof likeCount !== 'number' ||
       !Array.isArray(replies)
     ) {
       throw new Error(commentDetailErrors.NOT_MEET_DATA_TYPE_SPECIFICATION);

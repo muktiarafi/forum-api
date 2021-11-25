@@ -28,7 +28,7 @@ export class AddReplyUseCase {
     });
 
     await this.threadRepository.isThreadAvailable(threadId);
-    await this.commentRepository.checkExistance(parentId);
+    await this.commentRepository.isCommentAvailable(parentId);
 
     return this.commentRepository.addReply(newReply);
   }
