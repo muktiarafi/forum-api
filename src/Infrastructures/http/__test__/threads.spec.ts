@@ -1,7 +1,9 @@
 import { AuthenticationHelper } from '../../../../tests/authentication-helper';
 import { CommentsTableTestHelper } from '../../../../tests/comments-table-test-helper';
+import { LikesTableHelper } from '../../../../tests/likes-table-helper';
 import { ThreadsTableHelper } from '../../../../tests/threads-table-helper';
 import { UsersTableTestHelper } from '../../../../tests/user-table-test-helper';
+import { ThreadDetail } from '../../../Domains/threads/entities/thread-detail';
 import container from '../../inversify.config';
 import { createServer } from '../create-server';
 
@@ -1055,6 +1057,105 @@ describe('threads handler', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(403);
       expect(responseJson.status).toEqual('fail');
+    });
+  });
+
+  describe('PUT /threads/{threadId}/comments/{commentId}/likes', () => {
+    it('should respond 200 and like the comment', async () => {
+      const accessToken = await AuthenticationHelper.generateAccessToken({
+        id: 'user-1',
+      });
+      await ThreadsTableHelper.addThread({
+        id: 'thread-1',
+        title: 'title',
+        body: 'body',
+        userId: 'user-1',
+      });
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-1',
+        content: 'e',
+        threadId: 'thread-1',
+        userId: 'user-1',
+      });
+
+      const server = await createServer(container);
+
+      const likeResponse = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-1/comments/comment-1/likes',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      expect(likeResponse.statusCode).toEqual(200);
+
+      const response = await server.inject({
+        method: 'GET',
+        url: '/threads/thread-1',
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+
+      const thread: ThreadDetail = responseJson.data.thread;
+
+      expect(thread.id).toEqual('thread-1');
+      expect(thread.comments).toHaveLength(1);
+
+      const comment = thread.comments[0];
+      expect(comment.id).toEqual('comment-1');
+      expect(comment.likeCount).toEqual(1);
+    });
+
+    it('should respond 200 and unlike the comment', async () => {
+      const accessToken = await AuthenticationHelper.generateAccessToken({
+        id: 'user-1',
+      });
+      await ThreadsTableHelper.addThread({
+        id: 'thread-1',
+        title: 'title',
+        body: 'body',
+        userId: 'user-1',
+      });
+      await CommentsTableTestHelper.addComment({
+        id: 'comment-1',
+        content: 'e',
+        threadId: 'thread-1',
+        userId: 'user-1',
+      });
+      await LikesTableHelper.addLike('user-1', 'comment-1');
+
+      const server = await createServer(container);
+
+      const likeResponse = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-1/comments/comment-1/likes',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      expect(likeResponse.statusCode).toEqual(200);
+
+      const response = await server.inject({
+        method: 'GET',
+        url: '/threads/thread-1',
+      });
+
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+
+      const thread: ThreadDetail = responseJson.data.thread;
+
+      expect(thread.id).toEqual('thread-1');
+      expect(thread.comments).toHaveLength(1);
+
+      const comment = thread.comments[0];
+      expect(comment.id).toEqual('comment-1');
+      expect(comment.likeCount).toEqual(0);
     });
   });
 });

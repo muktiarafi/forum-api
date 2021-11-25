@@ -13,6 +13,7 @@ describe('ThreadDetailUseCase', () => {
         date: new Date().toString(),
         username: 'bambank',
         replies: [],
+        likeCount: 0,
         isDelete: false,
       }),
     ];

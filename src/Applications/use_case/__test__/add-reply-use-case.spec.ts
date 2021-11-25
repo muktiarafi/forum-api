@@ -22,7 +22,7 @@ describe('AddReplyUseCase', () => {
     const mockCommentRepository = <CommentRepository>{};
 
     mockThreadRepository.isThreadAvailable = jest.fn().mockImplementation(() => Promise.resolve());
-    mockCommentRepository.checkExistance = jest.fn().mockImplementation(() => Promise.resolve());
+    mockCommentRepository.isCommentAvailable = jest.fn().mockImplementation(() => Promise.resolve());
     mockCommentRepository.addReply = jest.fn(() => Promise.resolve(expectedAddedReply));
 
     const addReplyUseCase = new AddReplyUseCase(mockThreadRepository, mockCommentRepository);
@@ -30,7 +30,7 @@ describe('AddReplyUseCase', () => {
     const addedReply = await addReplyUseCase.execute(useCasePayload);
     expect(addedReply).toStrictEqual(expectedAddedReply);
     expect(mockThreadRepository.isThreadAvailable).toHaveBeenCalledWith(useCasePayload.threadId);
-    expect(mockCommentRepository.checkExistance).toHaveBeenCalledWith(useCasePayload.parentId);
+    expect(mockCommentRepository.isCommentAvailable).toHaveBeenCalledWith(useCasePayload.parentId);
     expect(mockCommentRepository.addReply).toHaveBeenCalledWith(
       new NewReply({
         userId: useCasePayload.userId,

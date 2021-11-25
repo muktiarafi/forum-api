@@ -3,26 +3,31 @@ import { CommentRepository } from '../../Domains/comments/comment-repository';
 import { ThreadRepository } from '../../Domains/threads/thread-repository';
 import TYPES from '../../Infrastructures/types';
 
-export interface DeleteReplyUseCasePayload {
+export interface CommentUseCasePayload {
   userId: string;
   threadId: string;
   commentId: string;
-  replyId: string;
 }
 
 @injectable()
-export class DeleteReplyUseCase {
+export class LikeCommentUseCase {
   constructor(
     @inject(TYPES.ThreadRepository) public threadRepository: ThreadRepository,
     @inject(TYPES.CommentRepository) public commentRepository: CommentRepository
   ) {}
 
-  async execute(payload: DeleteReplyUseCasePayload) {
-    const { userId, threadId, commentId, replyId } = payload;
+  async execute(payload: CommentUseCasePayload) {
+    const { userId, threadId, commentId } = payload;
 
-    await this.threadRepository.getThread(threadId);
+    await this.threadRepository.isThreadAvailable(threadId);
     await this.commentRepository.isCommentAvailable(commentId);
-    await this.commentRepository.checkOwnership(userId, replyId);
-    await this.commentRepository.deleteComment(replyId);
+
+    const isLiked = await this.commentRepository.isLiked(userId, commentId);
+
+    if (isLiked) {
+      await this.commentRepository.deleteLike(userId, commentId);
+    } else {
+      await this.commentRepository.addLike(userId, commentId);
+    }
   }
 }

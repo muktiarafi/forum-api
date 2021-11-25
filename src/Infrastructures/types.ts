@@ -23,6 +23,7 @@ const TYPES = {
   DeleteCommentUseCase: Symbol.for('DeleteCommentUseCase'),
   AddReplyUseCase: Symbol.for('AddReplyUseCase'),
   DeleteReplyUseCase: Symbol.for('DeleteReplyUseCase'),
+  LikeCommentUseCase: Symbol.for('LikeCommentUseCasee'),
 };
 
 export default TYPES;

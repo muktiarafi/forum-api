@@ -47,4 +47,12 @@ export const routes = (handler: ThreadsHandler): ServerRoute[] => [
       auth: 'token',
     },
   },
+  {
+    method: 'PUT',
+    path: '/threads/{threadId}/comments/{commentId}/likes',
+    handler: handler.putCommentLikeHandler,
+    options: {
+      auth: 'token',
+    },
+  },
 ];

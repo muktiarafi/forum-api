@@ -46,3 +46,10 @@ export interface IDeleteCommentReplyRequest extends IRequest {
     replyId: string;
   };
 }
+
+export interface IPutCommentLikeRequest extends IRequest {
+  params: {
+    threadId: string;
+    commentId: string;
+  };
+}
