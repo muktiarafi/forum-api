@@ -6,6 +6,11 @@ on:
       - master
     paths:
       - terraform/**
+  pull_request:
+    branches:
+      - master
+    paths:
+      - terraform/**
     
   workflow_dispatch:
 
@@ -27,6 +32,10 @@ jobs:
         
       - name: init
         run: terraform init
+        
+      - name: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan
       
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
