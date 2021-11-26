@@ -9,9 +9,3 @@ services:
     image: muktiarafi/forum-api
     env_file:
       - .env
-
-  # use database container instead of rds for now
-  pg:
-    image: postgres:alpine
-    env_file:
-      - .env
