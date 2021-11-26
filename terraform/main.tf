@@ -39,3 +39,32 @@ resource "aws_route53_record" "forum" {
     evaluate_target_health = true
   }
 }
+
+resource "aws_default_vpc" "default" {
+
+}
+
+resource "aws_security_group" "rds_connection" {
+  name   = "rds_connection"
+  vpc_id = aws_default_vpc.default.id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 6379
+    cidr_blocks = [var.rds_connection_cidr_block]
+    protocol    = "TCP"
+  }
+}
+
+resource "aws_db_instance" "pg" {
+  engine                 = "postgres"
+  engine_version         = "13.3"
+  name                   = var.rds_db_name
+  allocated_storage      = 10
+  instance_class         = "db.t3.micro"
+  username               = var.rds_username
+  password               = var.rds_password
+  multi_az               = false
+  skip_final_snapshot    = true
+  vpc_security_group_ids = [aws_security_group.rds_connection.id]
+}
