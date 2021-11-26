@@ -33,6 +33,7 @@ jobs:
         
       - name: init
         run: terraform init
+        working-directory: terraform
         
       - name: plan
         if: github.event_name == 'pull_request'
