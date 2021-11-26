@@ -29,6 +29,7 @@ jobs:
           
       - name: format
         run: terraform fmt -check
+        working-directory: terraform
         
       - name: init
         run: terraform init
@@ -36,7 +37,9 @@ jobs:
       - name: plan
         if: github.event_name == 'pull_request'
         run: terraform plan
+        working-directory: terraform
       
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve
+        working-directory: terraform
