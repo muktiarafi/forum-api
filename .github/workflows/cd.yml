@@ -41,5 +41,5 @@ jobs:
         application_name: forum
         environment_name: forum-env
         region: ap-southeast-1
-        version_label: '1'
+        version_label: ${{ github.sha }}
         deployment_package: deploy.zip
