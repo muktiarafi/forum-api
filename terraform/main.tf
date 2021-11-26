@@ -45,8 +45,9 @@ resource "aws_default_vpc" "default" {
 }
 
 resource "aws_security_group" "rds_connection" {
-  name   = "rds_connection"
-  vpc_id = aws_default_vpc.default.id
+  name        = "rds_connection"
+  description = "rule for rds"
+  vpc_id      = aws_default_vpc.default.id
 
   ingress {
     from_port   = 5432
