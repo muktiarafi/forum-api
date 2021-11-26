@@ -1,3 +1,13 @@
 node_modules
 coverage
 .env
+
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfplan
+*.pem
+*.hcl
+*.json
+*.asc
