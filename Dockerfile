@@ -22,3 +22,5 @@ WORKDIR /app
 COPY --from=cleaner /app .
 
 CMD ["src/app.js"]
+
+EXPOSE 8080
