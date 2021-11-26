@@ -57,14 +57,15 @@ resource "aws_security_group" "rds_connection" {
 }
 
 resource "aws_db_instance" "pg" {
-  engine                 = "postgres"
-  engine_version         = "13.3"
-  name                   = var.rds_db_name
-  allocated_storage      = 10
-  instance_class         = "db.t3.micro"
-  username               = var.rds_username
-  password               = var.rds_password
-  multi_az               = false
-  skip_final_snapshot    = true
-  vpc_security_group_ids = [aws_security_group.rds_connection.id]
+  engine                       = "postgres"
+  engine_version               = "12.5"
+  name                         = var.rds_db_name
+  allocated_storage            = 10
+  instance_class               = "db.t2.micro"
+  username                     = var.rds_username
+  password                     = var.rds_password
+  multi_az                     = false
+  skip_final_snapshot          = true
+  vpc_security_group_ids       = [aws_security_group.rds_connection.id]
+  performance_insights_enabled = false
 }
