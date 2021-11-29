@@ -1,11 +1,13 @@
 version: '3'
 services:
   nginx:
+    restart: always
     image: muktiarafi/forum-nginx
     ports:
       - '80:80'
 
   app:
+    restart: always
     image: muktiarafi/forum-api
     env_file:
       - .env
